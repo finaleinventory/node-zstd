@@ -4,7 +4,7 @@
       "target_name": "compressor",
       "include_dirs": [
         "<!(node -e \"require('nan')\")",
-        "deps/zstd/lib",
+        "/var/fwcs/bin/zstd-1.3.3/lib",
         "src/common"
       ],
       "dependencies": [
@@ -37,7 +37,7 @@
       "target_name": "decompressor",
       "include_dirs": [
         "<!(node -e \"require('nan')\")",
-        "deps/zstd/lib",
+        "/var/fwcs/bin/zstd-1.3.3/lib",
         "src/common"
       ],
       "dependencies": [

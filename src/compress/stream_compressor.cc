@@ -47,11 +47,12 @@ namespace ZSTD_NODE {
     Local<String> key;
     key = Nan::New<String>("level").ToLocalChecked();
     if (Has(userParams, key).FromJust()) {
-      level = Get(userParams, key).ToLocalChecked()->Int32Value();
+      level = Get(userParams, key).ToLocalChecked()->Int32Value(Nan::GetCurrentContext()).ToChecked();
     }
     key = Nan::New<String>("dict").ToLocalChecked();
     if (Has(userParams, key).FromJust()) {
-      Local<Object> dictBuf = Get(userParams, key).ToLocalChecked()->ToObject();
+      Local<Object> dictBuf = Nan::New<Object>();
+      dictBuf->Set(Nan::GetCurrentContext(), key, Get(userParams, key).ToLocalChecked());
       dictSize = Length(dictBuf);
       dict = alloc.Alloc(dictSize);
       memcpy(dict, Data(dictBuf), dictSize);
@@ -92,7 +93,7 @@ namespace ZSTD_NODE {
     if (!info.IsConstructCall()) {
       return Nan::ThrowError("StreamCompressor() must be called as a constructor");
     }
-    StreamCompressor *sc = new StreamCompressor(info[0]->ToObject());
+    StreamCompressor *sc = new StreamCompressor(info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked());
     sc->Wrap(info.This());
     info.GetReturnValue().Set(info.This());
   }
@@ -103,7 +104,7 @@ namespace ZSTD_NODE {
 
   NAN_METHOD(StreamCompressor::Copy) {
     StreamCompressor* sc = ObjectWrap::Unwrap<StreamCompressor>(info.Holder());
-    Local<Object> chunkBuf = info[0]->ToObject();
+    Local<Object> chunkBuf = info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked();
     char *chunk = Data(chunkBuf);
     size_t chunkSize = Length(chunkBuf);
     if (chunkSize != 0) {
@@ -118,10 +119,10 @@ namespace ZSTD_NODE {
 
   NAN_METHOD(StreamCompressor::Compress) {
     StreamCompressor* sc = ObjectWrap::Unwrap<StreamCompressor>(info.Holder());
-    bool isLast = info[0]->BooleanValue();
+    bool isLast = info[0]->BooleanValue(info.GetIsolate());
     Callback *callback = new Callback(info[1].As<Function>());
     StreamCompressWorker *worker = new StreamCompressWorker(callback, sc, isLast);
-    if (info[2]->BooleanValue()) {
+    if (info[2]->BooleanValue(info.GetIsolate())) {
       AsyncQueueWorker(worker);
     } else {
       worker->Execute();
