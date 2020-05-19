@@ -4,9 +4,9 @@
   "description": "Zstd wrapper for Nodejs",
   "main": "index.js",
   "scripts": {
-    "build": "/home/brian/dev/server/node_modules/bin/node-gyp.js -j 16 build",
-    "rebuild": "/home/brian/dev/server/node_modules/bin/node-gyp.js -j 16 rebuild",
-    "clean": "/home/brian/dev/server/node_modules/bin/node-gyp.js clean"
+    "build": "node-gyp -j 16 build",
+    "rebuild": "node-gyp -j 16 rebuild",
+    "clean": "node-gyp clean"
   },
   "files": [
     "README.md",
