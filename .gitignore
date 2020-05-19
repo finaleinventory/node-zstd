@@ -33,6 +33,5 @@
 
 # Node Related Folders
 build
-node_modules
 coverage
 .nyc_output

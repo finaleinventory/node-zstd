@@ -17,6 +17,10 @@
     "build/",
     "deps/"
   ],
+  "repository":{
+    "type":"git",
+    "url":"git+https://github.com/finaleinventory/node-zstd.git"
+  },
   "keywords": [
     "zstd",
     "compression",
