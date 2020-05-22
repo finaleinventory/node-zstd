@@ -51,8 +51,7 @@ namespace ZSTD_NODE {
     }
     key = Nan::New<String>("dict").ToLocalChecked();
     if (Has(userParams, key).FromJust()) {
-      Local<Object> dictBuf = Nan::New<Object>();
-      dictBuf->Set(Nan::GetCurrentContext(), key, Get(userParams, key).ToLocalChecked());
+      auto dictBuf = Get(userParams, key).ToLocalChecked()->ToObject(Nan::GetCurrentContext()).ToChecked();
       dictSize = Length(dictBuf);
       dict = alloc.Alloc(dictSize);
       memcpy(dict, Data(dictBuf), dictSize);
